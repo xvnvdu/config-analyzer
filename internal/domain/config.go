@@ -10,7 +10,7 @@ type Config map[string]any
 // (переменных конфига). path - это узлы в заданном порядке,
 // которые потенциально приведут к листьям
 func (c Config) Get(path ...string) (any, bool) {
-	var current any = c
+	var current any = map[string]any(c)
 
 	for _, key := range path {
 		m, ok := current.(map[string]any)

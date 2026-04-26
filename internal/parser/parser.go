@@ -15,7 +15,7 @@ func ParseFile(path string) (domain.Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	return parse(data)
+	return Parse(data)
 }
 
 func ParseStdin() (domain.Config, error) {
@@ -23,10 +23,10 @@ func ParseStdin() (domain.Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	return parse(data)
+	return Parse(data)
 }
 
-func parse(data []byte) (domain.Config, error) {
+func Parse(data []byte) (domain.Config, error) {
 	var cfg domain.Config
 
 	jsonErr := json.Unmarshal(data, &cfg)
@@ -38,5 +38,5 @@ func parse(data []byte) (domain.Config, error) {
 		return cfg, nil
 	}
 
-	return nil, fmt.Errorf("failed to parse config: json: %v, yaml: %v", jsonErr, yamlErr)
+	return nil, fmt.Errorf("json: %v, yaml: %v", jsonErr, yamlErr)
 }

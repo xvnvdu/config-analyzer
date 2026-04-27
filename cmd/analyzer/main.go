@@ -5,13 +5,18 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"os"
 
+	pb "github.com/xvnvdu/config-analyzer/api"
 	"github.com/xvnvdu/config-analyzer/internal/checker"
 	"github.com/xvnvdu/config-analyzer/internal/domain"
+	g "github.com/xvnvdu/config-analyzer/internal/grpc"
 	"github.com/xvnvdu/config-analyzer/internal/parser"
 	"github.com/xvnvdu/config-analyzer/internal/rules"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 // Основной набор правил, на соответствие которым
@@ -52,8 +57,7 @@ func main() {
 	case "http":
 		runHTTP(c, *port)
 	case "grpc":
-		fmt.Fprintln(os.Stderr, "не реализовано")
-		os.Exit(1)
+		runGRPC(c, *port)
 	default:
 		fmt.Fprintln(os.Stderr, "неизвестный режим, используйте флаг '-h' для инструкции по использованию утилиты")
 		os.Exit(1)
@@ -140,6 +144,22 @@ func runHTTP(c *checker.Checker, port int) {
 
 // Запускает утилиту как gRPC-сервер, если при запуске был выбран --mode=grpc
 func runGRPC(c *checker.Checker, port int) {
+	addr := fmt.Sprintf(":%d", port)
+	lis, err := net.Listen("tcp", addr)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ошибка запуска listener: %v\n", err)
+		os.Exit(1)
+	}
+
+	grpcServer := grpc.NewServer()
+	pb.RegisterAnalyzerServer(grpcServer, g.New(c))
+	reflection.Register(grpcServer)
+
+	fmt.Fprintf(os.Stdout, "gRPC сервер запущен на %s\n", addr)
+	if err := grpcServer.Serve(lis); err != nil {
+		fmt.Fprintf(os.Stderr, "ошибка запуска сервера: %v\n", err)
+		os.Exit(1)
+	}
 }
 
 // Вспомогательная функция для вывода результатов в режиме CLI,

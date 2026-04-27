@@ -1,0 +1,15 @@
+{
+    "version": "1.0",
+    "log": {
+        "output": "stdout",
+        "level": "debug"
+    },
+    "host": "0.0.0.0",
+    "tls": {
+        "enabled": false
+    },
+    "storage": {
+        "digest-algorithm": "SHA1"
+    },
+    "password": "supersecret123"
+}

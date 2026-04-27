@@ -1,0 +1,18 @@
+{
+    "version": "1.0",
+    "log": {
+        "output": "stdout",
+        "level": "info"
+    },
+    "host": [
+        "127.0.0.1",
+        "192.168.0.0"
+    ],
+    "tls": {
+        "verify": true
+    },
+    "storage": {
+        "digest-algorithm": "SHA256"
+    },
+    "password": true
+}

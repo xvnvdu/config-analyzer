@@ -1,0 +1,14 @@
+version: "2.0"
+
+debug: true
+
+host: "0.0.0.0"
+
+database:
+  password: "qwerty12345"
+
+storage:
+  digest-algorithm: MD5
+
+tls:
+  enabled: false

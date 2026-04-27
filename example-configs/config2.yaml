@@ -1,0 +1,14 @@
+version: "2.0"
+
+debug: false
+
+host: "127.0.0.1"
+
+database:
+  password: true
+
+storage:
+  digest-algorithm: SHA512
+
+ssl:
+  enabled: true

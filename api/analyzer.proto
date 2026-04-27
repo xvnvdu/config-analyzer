@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package analyzer;
+
+option go_package = "github.com/xvnvdu/config-analyzer/api/analyzer";
+
+service Analyzer {
+  rpc Analyze(AnalyzeRequest) returns (AnalyzeResponse);
+}
+
+message AnalyzeRequest {
+  bytes config = 1;
+}
+
+message AnalyzeResponse {
+  repeated Issue issues = 1;
+}
+
+message Issue {
+  string level = 1;
+  string message = 2;
+  string recommendation = 3;
+  string rule_name = 4;
+}

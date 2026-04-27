@@ -12,11 +12,23 @@ type Config map[string]any
 func (c Config) Get(path ...string) (any, bool) {
 	var current any = map[string]any(c)
 
+	// YAML использует вложенные объекты конфига как
+	// Config, а не map[string]any, из-за чего некоторые
+	// правила падали на !ok, поэтому добавим явное приведение
+	// элементов к типу map[string]any для полноты проверок
 	for _, key := range path {
-		m, ok := current.(map[string]any)
-		if !ok {
+		var m map[string]any
+
+		switch v := current.(type) {
+		case map[string]any:
+			m = v
+		case Config:
+			m = map[string]any(v)
+		default:
 			return nil, false
 		}
+
+		var ok bool
 
 		current, ok = m[key]
 		if !ok {
